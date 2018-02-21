@@ -5,7 +5,11 @@ var bcrypt = require('bcryptjs');
 var verificaToken = require('../middlewares/autenticacion')
 
 app.get('/', (req, res, next) => {
+  var desde = req.query.desde || 0;
+  desde = Number(desde);
   User.find({},'name email image role')
+    .skip(desde)
+    .limit(5)
     .exec(
       (error, users) => {
       if(error) {
@@ -15,10 +19,15 @@ app.get('/', (req, res, next) => {
           errors: error
         })
       }
-      res.status(200).json({
-        ok: true,
-        users
-      });
+
+      User.count({},(err, conteo) => {
+        res.status(200).json({
+          ok: true,
+          users: users,
+          total: conteo
+        });
+      })
+
   })
 })
 

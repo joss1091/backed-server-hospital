@@ -1,11 +1,19 @@
 var express = require('express');
 var app = express();
 var Hospital = require('../models/hospital');
+//var User = require('../models/user');
 var verificaToken = require('../middlewares/autenticacion')
 
 
 app.get('/', (req, res, next) => {
-  Hospital.find({}, (error, hospital) => {
+  var desde = req.query.desde || 0;
+  desde = Number(desde);
+  Hospital.find({})
+  .skip(desde)
+  .limit(5)
+   .populate('user','name email')
+   .exec(
+     (error, hospital) => {
       if(error) {
         return res.status(500).json({
           ok: false,
@@ -13,12 +21,16 @@ app.get('/', (req, res, next) => {
           errors: error
         })
       }
-      res.status(200).json({
-        ok: true,
-        hospital
-      });
-  })
-})
+      Hospital.count({},(err, conteo) => {
+        res.status(200).json({
+          ok: true,
+          hospital,
+          total: conteo
+        });
+      })
+
+  });
+});
 
 
 

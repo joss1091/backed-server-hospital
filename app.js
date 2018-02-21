@@ -21,6 +21,9 @@ var userRoutes = require('./routes/user');
 var hospitalRoutes = require('./routes/hospital');
 var doctorRoutes = require('./routes/doctor');
 var loginRoutes = require('./routes/login');
+var searchRoutes = require('./routes/search');
+var uploadRoutes = require('./routes/upload');
+var imagesRoutes = require('./routes/images');
 
 
 //coneccion a bd
@@ -37,13 +40,19 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitaldb', (err, res) =
 
 //Bind connection to error event (to get notification of connection errors)
 //db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
+//server-index
+// var serveIndex = require('serve-index')
+// app.use(express.static(__dirname + '/'))
+// app.use('/uploads', serveIndex(__dirname +'/uploads'));
 
 //rutas
 app.use('/user', userRoutes);
 app.use('/hospital', hospitalRoutes);
 app.use('/doctor', doctorRoutes);
 app.use('/login', loginRoutes);
+app.use('/search', searchRoutes);
+app.use('/upload', uploadRoutes);
+app.use('/images', imagesRoutes);
 app.use('/', appRoutes);
 
 //escuchar peticiones

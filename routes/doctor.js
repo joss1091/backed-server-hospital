@@ -5,7 +5,14 @@ var verificaToken = require('../middlewares/autenticacion')
 
 
 app.get('/', (req, res, next) => {
-  Doctor.find({}, (error, doctor) => {
+  var desde = req.query.desde || 0;
+  desde = Number(desde);
+  Doctor.find({})
+  .populate('user', 'name email')
+  .populate('hospital')
+  .skip(desde)
+  .limit(5)
+    .exec((error, doctor) => {
       if(error) {
         return res.status(500).json({
           ok: false,
@@ -13,10 +20,14 @@ app.get('/', (req, res, next) => {
           errors: error
         })
       }
-      res.status(200).json({
-        ok: true,
-        doctor
-      });
+      Doctor.count({}, (err, conteo) => {
+        res.status(200).json({
+          ok: true,
+          doctor,
+          total: conteo
+        });
+      })
+
   })
 })
 
