@@ -34,7 +34,7 @@ app.get('/', (req, res, next) => {
 
 
 //crear usuario
-app.post('/', verificaToken.verificaToken,(req,res, NEXT) => {
+app.post('/', (req,res, next) => {
   var body = req.body;
   var user = new User({
     name: body.name,

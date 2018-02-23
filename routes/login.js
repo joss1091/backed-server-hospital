@@ -75,12 +75,13 @@ app.post('/google', (req, res,next) =>{
        }
        if(user){
          if(!user.google){
-           res.status(400)
+           return res.status(400)
            .json(createErrorObject('tienes que iniciar con tu cuenta'))
          }
          res.status(200).json({
            ok: true,
-           user: user
+           user: user,
+           token: jwt.sign({user: user}, SECRET_KEY,{ expiresIn: 14400})
          })
        }else{
          var newUser = User();
@@ -97,7 +98,8 @@ app.post('/google', (req, res,next) =>{
            }
            res.status(200).json({
              ok: true,
-             user: user
+             user: user,
+             token: jwt.sign({user: user}, SECRET_KEY,{ expiresIn: 14400})
            })
          })
        }
